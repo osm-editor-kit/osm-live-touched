@@ -122,6 +122,10 @@ Then Claude adds a `minor` changeset, and the push to `main` publishes `0.1.0` v
 
 ### M6: JOSM plugin (later)
 
+### Parked: never send a write-capable OSM token to key-value-db
+
+Plan, facts checked on 2026-09-27, and options (key-value-db login popup, or OpenID Connect id_token plus a key-value-db session token): [docs/followup-token-auth.md](docs/followup-token-auth.md). Not scheduled. It should be settled before editors other than our own iD build use the feature, and before M6 (JOSM login).
+
 ## Log
 
 - 2026-09-27: Claude merged PR #2 on Tobias's OK. Worker deployed (schema 0002), client `0.1.0` on npm with provenance, and production reads for knotenpunkte and parkraum are unchanged. Local key-value-db `main` was reset to `origin/main`: its only local commit had been merged with identical content. live-touched now uses the npm client. T11 done, and `@osm-editor-kit/live-touched@0.1.0` is on npm. Next: T10 (iD chat plus a test with two accounts), then M6 JOSM.
