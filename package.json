@@ -1,0 +1,31 @@
+{
+  "name": "osm-live-touched",
+  "private": true,
+  "license": "MIT",
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "bun run --filter @osm-editor-kit/live-touched build",
+    "check": "bun run --filter '*' check",
+    "check-exports": "bun run --filter @osm-editor-kit/live-touched check-exports",
+    "format": "bun run --filter '*' format",
+    "format:check": "bun run --filter '*' format:check",
+    "lint": "bun run --filter '*' lint",
+    "release": "bun run build && changeset publish",
+    "test": "bun run --filter '*' test",
+    "type-check": "bun run --filter '*' type-check",
+    "version-packages": "changeset version"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@changesets/cli": "^2.31.1",
+    "@types/bun": "latest",
+    "oxfmt": "0.50.0",
+    "oxlint": "1.65.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  },
+  "engines": {
+    "node": ">=22.21.1"
+  },
+  "packageManager": "bun@1.4.0"
+}

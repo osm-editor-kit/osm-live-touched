@@ -1,0 +1,57 @@
+{
+  "name": "@osm-editor-kit/live-touched",
+  "version": "0.0.0",
+  "description": "See live which OSM objects other mappers are editing near you, before they upload. Editor-agnostic wiring (API, sync, polling, status); each editor brings its own UI.",
+  "keywords": [
+    "conflicts",
+    "editor",
+    "iD",
+    "live",
+    "openstreetmap",
+    "osm"
+  ],
+  "homepage": "https://github.com/osm-editor-kit/osm-live-touched/tree/main/packages/live-touched#readme",
+  "bugs": {
+    "url": "https://github.com/osm-editor-kit/osm-live-touched/issues"
+  },
+  "license": "MIT",
+  "author": "Tobias Jordans",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osm-editor-kit/osm-live-touched.git",
+    "directory": "packages/live-touched"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "check": "bun run format:check && bun run lint && bun run type-check && bun run test",
+    "check-exports": "attw --pack . --ignore-rules cjs-resolves-to-esm no-resolution --profile node16",
+    "format": "oxfmt --config ../../oxfmt.config.mjs --write .",
+    "format:check": "oxfmt --config ../../oxfmt.config.mjs --check .",
+    "lint": "oxlint -c ../../oxlint.config.mjs .",
+    "prepublishOnly": "bun run build",
+    "test": "vitest run",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@osm-editor-kit/key-value-db-client": "file:../../../../FMC/key-value-db/packages/kv-client"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

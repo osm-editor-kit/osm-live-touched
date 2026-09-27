@@ -1,0 +1,69 @@
+# From the FMC tech-stack template (tilda-geo), trimmed for this repo.
+# Schedule: open-source repos → first Friday of the month, 07:00 Europe/Berlin.
+# Add a gradle entry for packages/josm-plugin once it exists (M6).
+version: 2
+updates:
+  - package-ecosystem: bun
+    directories:
+      - /
+    schedule:
+      interval: cron
+      cronjob: '0 7 * * FRI#1'
+      timezone: Europe/Berlin
+    cooldown:
+      default-days: 5
+    open-pull-requests-limit: 1
+    exclude-paths:
+      - .cursor/**
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      security-dev-tools:
+        applies-to: security-updates
+        patterns:
+          - 'oxlint*'
+          - 'oxfmt*'
+          - 'vitest*'
+          - '@types/*'
+          - 'typescript'
+          - '@arethetypeswrong/*'
+          - '@changesets/*'
+
+      dev-tools-minor-patch:
+        applies-to: version-updates
+        patterns:
+          - 'oxlint*'
+          - 'oxfmt*'
+          - 'vitest'
+          - '@types/*'
+          - 'typescript'
+          - '@arethetypeswrong/*'
+          - '@changesets/*'
+        update-types:
+          - minor
+          - patch
+
+      misc-patch:
+        applies-to: version-updates
+        update-types:
+          - patch
+        patterns:
+          - '*'
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: cron
+      cronjob: '0 7 * * FRI#1'
+      timezone: Europe/Berlin
+    cooldown:
+      default-days: 5
+    open-pull-requests-limit: 1
+    groups:
+      actions-minor-patch:
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - '*'
