@@ -25,7 +25,7 @@ Legend: 🤖 Claude does it locally · 🧑 needs Tobias · ✅ done · ⏳ in p
 | T8  | after T5                | npm: trusted publisher for the kv-client package | ✅ Placeholder `0.0.0` published and trust set by Tobias. CI published **`0.1.0` with provenance** |
 | T9  | after M2                | Review `PRIVACY.md` (both) and give the FixMyCity imprint and privacy URLs                                               | ⬜ |
 | T10 | after M4                | Run the iD--radnetz-berlin chat, then test with two browser profiles and two real OSM accounts                          | ⬜ |
-| T11 | before M5               | npm: placeholder publish plus trusted publisher for `@osm-editor-kit/live-touched` → `osm-editor-kit/osm-live-touched` `release.yml` (commands under "npm trusted publishing") | ⏸ Ready: the dependency is now `^0.1.0`, so you can do it now |
+| T11 | before M5               | npm: placeholder publish plus trusted publisher for `@osm-editor-kit/live-touched` → `osm-editor-kit/osm-live-touched` `release.yml` (commands under "npm trusted publishing") | ✅ Placeholder `0.0.0` published and trust set by Tobias. `release.yml` published **`0.1.0` with provenance** |
 
 ## npm trusted publishing: steps for Tobias 🧑
 
@@ -116,15 +116,15 @@ Then Claude adds a `minor` changeset, and the push to `main` publishes `0.1.0` v
 - ✅ `packages/live-touched/README.md`: the API and the **iD integration guide**, checked against the iD--radnetz-berlin source: `history().difference().summary()`, `uploader()` `resultSuccess`, `map()` `move`/`drawn`, entity classes `.w789`. The token getter is private in `services/osm.js`, so the guide includes a small patch that adds `getAccessToken()`. Open items to check in the iD chat are listed there.
 - For the iD chat: point it to `packages/live-touched/README.md` (section "iD integration guide") and `docs/concept.md`.
 
-### M5: release 🧑 T4 + T11, 🤖 prepares
+### M5: release ✅
 
-- ⬜ Changeset for `0.1.0` and the release workflow check. Publishing only happens after T11.
+- ✅ Changeset → `release.yml` → `@osm-editor-kit/live-touched@0.1.0` on npm. The Dependabot PR (`setup-node` 4 → 7) was merged with a rebase on Tobias's OK, and CI on `main` is green.
 
 ### M6: JOSM plugin (later)
 
 ## Log
 
-- 2026-09-27: Claude merged PR #2 on Tobias's OK. Worker deployed (schema 0002), client `0.1.0` on npm with provenance, and production reads for knotenpunkte and parkraum are unchanged. Local key-value-db `main` was reset to `origin/main`: its only local commit had been merged with identical content. live-touched now uses the npm client. Waiting for Tobias: T11 npm. (T6 and T7 done.)
+- 2026-09-27: Claude merged PR #2 on Tobias's OK. Worker deployed (schema 0002), client `0.1.0` on npm with provenance, and production reads for knotenpunkte and parkraum are unchanged. Local key-value-db `main` was reset to `origin/main`: its only local commit had been merged with identical content. live-touched now uses the npm client. T11 done, and `@osm-editor-kit/live-touched@0.1.0` is on npm. Next: T10 (iD chat plus a test with two accounts), then M6 JOSM.
 - 2026-09-27: surface-smoothness `license-mit` landed on `main`. key-value-db PR [#2](https://github.com/FixMyBerlin/key-value-db/pull/2) opened (not merged). osm-live-touched `main` pushed. Next: Tobias does T8, then merges #2 (T5).
 - 2026-09-27: T1–T3 done. The client is renamed and publishable. This repo has Dependabot (monthly) and a CI dependency review. Waiting: OK for the first push to osm-live-touched, and for pushing key-value-db `live-touched-support` (then review/merge = T5).
 - 2026-09-27: M2 docs (draft), M3 package, and the M4 guide are done locally. The e2e run against the local backend is green. **Everything is uncommitted and waits for Tobias (T1–T3, T9).**
