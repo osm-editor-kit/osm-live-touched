@@ -1,6 +1,6 @@
 {
   "name": "@osm-editor-kit/live-touched",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "See live which OSM objects other mappers are editing near you, before they upload. Editor-agnostic wiring (API, sync, polling, status); each editor brings its own UI.",
   "keywords": [
     "conflicts",
