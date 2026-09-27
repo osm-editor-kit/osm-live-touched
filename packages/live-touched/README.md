@@ -4,7 +4,7 @@ Editor-agnostic wiring for "live touched": mappers see which OSM objects other m
 
 The package contains the API client usage, the diff-based sync, adaptive polling, status windows, and conflict hints. It has **no UI and no editor code**: each editor (iD, Rapid, …) hooks its events into the session and draws its own map highlight, panel, indicator, and consent dialog. The UI rules and reference texts (English and German) are in [docs/concept.md](../../docs/concept.md), and the privacy statement is in [PRIVACY.md](../../PRIVACY.md).
 
-> Status: pre-release. The key-value-db client is not on npm yet, so the package currently depends on a local `file:` path (see [WORKPLAN.md](../../WORKPLAN.md), T2/T8).
+> Status: pre-release (not on npm yet). It uses the npm client [`@osm-editor-kit/key-value-db-client`](https://www.npmjs.com/package/@osm-editor-kit/key-value-db-client).
 
 ## API
 
