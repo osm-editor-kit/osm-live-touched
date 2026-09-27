@@ -17,15 +17,43 @@ Legend: 🤖 Claude does it locally · 🧑 needs Tobias · ✅ done · ⏳ in p
 | --- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ |
 | T1  | now                     | Allow **local commits** on feature branches, never pushed, in osm-live-touched, key-value-db, and surface-smoothness | ✅ OK. Ask before each push |
 | T2  | before M1 R10           | Pick the npm name for the key-value-db client                                                                            | ✅ `@osm-editor-kit/key-value-db-client` |
-| T3  | any time                | surface-smoothness branch `license-mit`: review, then commit and push                                                    | ✅ Committed (`0d55e45`) and pushed. No PR opened yet |
-| T4  | after M0                | Create the GitHub repo `osm-editor-kit/osm-live-touched`, then OK the first push, and set up the repo (see "Repo settings") | ⏳ Repo created; first push waits for OK |
-| T5  | after M1                | Review the key-value-db branch, merge to `main`. **This deploys the Worker and runs the remote D1 migration** (`deploy-api.yml`) | ⬜ |
+| T3  | any time                | surface-smoothness branch `license-mit`: review, then commit and push                                                    | ✅ On `main` (`0d55e45`, fast-forward). Branch deleted on GitHub and locally |
+| T4  | after M0                | Create the GitHub repo `osm-editor-kit/osm-live-touched`, then OK the first push, and set up the repo (see "Repo settings") | ✅ Pushed `main`. CI stays red until the client is on npm (T8), then the dependency switches to `^0.1.0` |
+| T5  | after M1 + T8           | Merge PR [FixMyBerlin/key-value-db#2](https://github.com/FixMyBerlin/key-value-db/pull/2) to `main`. **This deploys the Worker and runs the remote D1 migration** (`deploy-api.yml`) | ⬜ |
 | T6  | after T5                | One test write each in knotenpunkte and parkraum-zaehlung (needs an OSM login). Claude checks health and the public `/data` pages read-only | ⬜ |
 | T7  | after T5                | MCP in Cursor: set `live-touched` → `read_access: osm_user`, `write_scope: owner`, `entry_ttl_s: 10800`. Claude checks the behavior afterwards | ⬜ |
 | T8  | after T5                | npm: trusted publisher for the kv-client package → `FixMyBerlin/key-value-db` `release.yml`. First publish by hand if npm needs the package to exist first | ⬜ |
 | T9  | after M2                | Review `PRIVACY.md` (both) and give the FixMyCity imprint and privacy URLs                                               | ⬜ |
 | T10 | after M4                | Run the iD--radnetz-berlin chat, then test with two browser profiles and two real OSM accounts                          | ⬜ |
 | T11 | before M5               | npm: trusted publisher for `@osm-editor-kit/live-touched` → `osm-editor-kit/osm-live-touched` `release.yml`, and merge the release changeset | ⬜ |
+
+## npm trusted publishing: steps for Tobias 🧑
+
+npm requires the package to exist before a trusted publisher can be added, and `npm trust` needs your login with 2FA. So each package gets one manual placeholder publish (`0.0.0`); after that, CI publishes with provenance. Order: client first, then live-touched.
+
+**T8: `@osm-editor-kit/key-value-db-client`** (before merging PR #2)
+
+```bash
+cd ~/Development/FMC/key-value-db && git switch live-touched-support && cd packages/kv-client
+npm login
+npm publish --access public --provenance=false
+npm trust github @osm-editor-kit/key-value-db-client --repo FixMyBerlin/key-value-db --file release-client.yml --allow-publish
+npm trust list @osm-editor-kit/key-value-db-client
+```
+
+- `npm publish` runs the build through `prepublishOnly`. `--provenance=false` is needed because provenance only works inside CI.
+- Then merge PR #2. `release-client.yml` publishes `0.1.0` with provenance. Check with `npm view @osm-editor-kit/key-value-db-client versions`.
+- Optional: `npm deprecate @osm-editor-kit/key-value-db-client@0.0.0 "placeholder, use >=0.1.0"`.
+
+**T11: `@osm-editor-kit/live-touched`** (after the client `0.1.0` is out; Claude first switches the dependency to `^0.1.0` and pushes)
+
+```bash
+cd ~/Development/OSM/osm-live-touched/packages/live-touched
+npm publish --access public --provenance=false
+npm trust github @osm-editor-kit/live-touched --repo osm-editor-kit/osm-live-touched --file release.yml --allow-publish
+```
+
+Then Claude adds a `minor` changeset, and the push to `main` publishes `0.1.0` via `release.yml`.
 
 ## Repo settings (osm-editor-kit/osm-live-touched) 🧑
 
@@ -96,6 +124,7 @@ Legend: 🤖 Claude does it locally · 🧑 needs Tobias · ✅ done · ⏳ in p
 
 ## Log
 
+- 2026-09-27: surface-smoothness `license-mit` landed on `main`. key-value-db PR [#2](https://github.com/FixMyBerlin/key-value-db/pull/2) opened (not merged). osm-live-touched `main` pushed. Next: Tobias does T8, then merges #2 (T5).
 - 2026-09-27: T1–T3 done. The client is renamed and publishable. This repo has Dependabot (monthly) and a CI dependency review. Waiting: OK for the first push to osm-live-touched, and for pushing key-value-db `live-touched-support` (then review/merge = T5).
 - 2026-09-27: M2 docs (draft), M3 package, and the M4 guide are done locally. The e2e run against the local backend is green. **Everything is uncommitted and waits for Tobias (T1–T3, T9).**
 - 2026-09-27: M1 code, docs, and the local smoke run are done in key-value-db (uncommitted, branch `live-touched-support`, `check-ci` green: 35 API + 9 client + 4 demo tests). R10 packaging waits for T2. Next: M2 docs and M3 package.
