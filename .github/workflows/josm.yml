@@ -1,0 +1,43 @@
+name: JOSM plugin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/josm-plugin/**'
+      - '.github/workflows/josm.yml'
+  pull_request:
+    paths:
+      - 'packages/josm-plugin/**'
+      - '.github/workflows/josm.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/josm-plugin
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14'
+
+      - name: Build and test
+        run: gradle --no-daemon build
+
+      - name: Upload plugin jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-touched-josm-plugin
+          path: packages/josm-plugin/build/dist/live-touched.jar

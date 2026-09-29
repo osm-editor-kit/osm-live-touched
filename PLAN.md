@@ -155,6 +155,7 @@ Phase 2 of key-value-db already plans `READ_RL` and `WRITE_RL` bindings. With po
 - **Option A (preferred, no backend change):** the plugin sends a fixed `Origin: https://josm.openstreetmap.de`, and Tobias adds exactly that value to the project through MCP. Java's old `HttpURLConnection` (and JOSM's default `HttpClient` wrapper based on it) blocks the `Origin` header unless `sun.net.http.allowRestrictedHeaders=true`. So the plugin makes its requests with `java.net.http.HttpClient`, which allows the header. Verify this in M6.
 - Option B: a project setting `allow_originless: bool` in key-value-db. Use it only if A fails.
 - We do **not** need a wildcard origin.
+- **Decided (M6):** option A. The plugin uses `java.net.http` (it is included in the Java runtime that ships with JOSM) and sends `Origin: https://josm.openstreetmap.de`. The production project needs that origin added (T12 in WORKPLAN.md).
 
 **R10: publish the client to npm instead of copying it (required).**
 Today `packages/kv-client` (`@kv/client`) is workspace-only and exports raw `src/index.ts`. knotenpunkte and parkraum-zaehlung each carry a **copy** in `src/shared/kv-client/`, and the copies have already drifted. They added zod response validation (`schema.ts`) and a zod error-body parser, while the original has no validation. A third copy in this repo would make it worse.

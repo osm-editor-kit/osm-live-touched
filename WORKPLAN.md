@@ -25,6 +25,8 @@ Legend: 🤖 Claude does it locally · 🧑 needs Tobias · ✅ done · ⏳ in p
 | T8  | after T5                | npm: trusted publisher for the kv-client package | ✅ Placeholder `0.0.0` published and trust set by Tobias. CI published **`0.1.0` with provenance** |
 | T9  | after M2                | Review `PRIVACY.md` (both) and give the FixMyCity imprint and privacy URLs                                               | ⬜ |
 | T10 | after M4                | Run the iD--radnetz-berlin chat, then test with two browser profiles and two real OSM accounts                          | ⬜ |
+| T12 | before trying JOSM      | MCP: add origin `https://josm.openstreetmap.de` to `live-touched` (keep the others)                                          | ⏸ |
+| T13 | after T12               | Install and try the JOSM plugin locally (`bun run josm-install`, see `packages/josm-plugin/README.md`)                      | ⏸ |
 | T11 | before M5               | npm: placeholder publish plus trusted publisher for `@osm-editor-kit/live-touched` → `osm-editor-kit/osm-live-touched` `release.yml` (commands under "npm trusted publishing") | ✅ Placeholder `0.0.0` published and trust set by Tobias. `release.yml` published **`0.1.0` with provenance** |
 
 ## npm trusted publishing: steps for Tobias 🧑
@@ -120,7 +122,14 @@ Then Claude adds a `minor` changeset, and the push to `main` publishes `0.1.0` v
 
 - ✅ Changeset → `release.yml` → `@osm-editor-kit/live-touched@0.1.0` on npm. The Dependabot PR (`setup-node` 4 → 7) was merged with a rebase on Tobias's OK, and CI on `main` is green.
 
-### M6: JOSM plugin (later)
+### M6: JOSM plugin 🤖 ✅ (built, not yet tried in a real JOSM), then T12 + T13
+
+- ✅ `packages/josm-plugin`: Gradle with the `org.openstreetmap.josm` plugin 0.8.2, compiled against JOSM **19481** (Tobias's installed version, Java 11 target), and built in Docker (`bun run josm-build`). No local Java needed.
+- ✅ Ports of tiles, status, and sync. `java.net.http` client with `Origin: https://josm.openstreetmap.de` (R7 option A). Session, side panel, map highlight, upload hook ("saved" detection), consent dialog, and "Delete my data". It uses JOSM's own OAuth 2.0 token (`OAuthAccessTokenHolder`, looked up by host).
+- ✅ 15 unit tests, plus a contract test against a local `wrangler dev` with a stub OSM server: two JOSM sessions see each other, get the `parallel` hint, see `saved` v8 with the `outdated` hint, and delete my data works.
+- ✅ CI `.github/workflows/josm.yml` builds, tests, and uploads the jar as an artifact.
+- ⏸ **T12**: add the origin `https://josm.openstreetmap.de` to the production project `live-touched` (MCP `update_project`, keep the existing origins). Without it, JOSM gets `403 origin_not_allowed`.
+- ⏸ **T13**: try it in your JOSM (`bun run josm-install`, then enable the plugin; see `packages/josm-plugin/README.md`). Ideally with a second account in iD or a second JOSM profile.
 
 ### Parked: never send a write-capable OSM token to key-value-db
 

@@ -1,0 +1,12 @@
+{
+  "name": "live-touched-josm-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JOSM plugin for live touched. Built with Gradle in Docker (no local Java needed).",
+  "license": "MIT",
+  "scripts": {
+    "josm-build": "docker run --rm -v \"$PWD\":/home/gradle/project -w /home/gradle/project -v live-touched-gradle:/home/gradle/.gradle gradle:8.14-jdk21 gradle --no-daemon build",
+    "josm-clean": "docker run --rm -v \"$PWD\":/home/gradle/project -w /home/gradle/project -v live-touched-gradle:/home/gradle/.gradle gradle:8.14-jdk21 gradle --no-daemon clean",
+    "josm-install": "bun run josm-build && mkdir -p \"$HOME/Library/JOSM/plugins\" && cp build/dist/live-touched.jar \"$HOME/Library/JOSM/plugins/live-touched.jar\" && echo \"Installed to ~/Library/JOSM/plugins/live-touched.jar\""
+  }
+}

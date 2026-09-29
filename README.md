@@ -7,7 +7,7 @@ Part of the [`osm-editor-kit`](https://github.com/osm-editor-kit) family. [FixMy
 | Path | What |
 | --- | --- |
 | [`packages/live-touched`](packages/live-touched) | npm [`@osm-editor-kit/live-touched`](https://www.npmjs.com/package/@osm-editor-kit/live-touched): editor-agnostic wiring (API, sync, polling, status). No UI. |
-| `packages/josm-plugin` | JOSM plugin (later) |
+| [`packages/josm-plugin`](packages/josm-plugin) | JOSM plugin (Java, built with Gradle in Docker). Install: `bun run josm-install` |
 | [`PRIVACY.md`](PRIVACY.md) | Privacy statement (M2) |
 | [`PLAN.md`](PLAN.md) | Implementation plan |
 | [`WORKPLAN.md`](WORKPLAN.md) | Work plan: order, status, and touchpoints |

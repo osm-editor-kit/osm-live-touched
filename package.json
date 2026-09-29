@@ -2,13 +2,17 @@
   "name": "osm-live-touched",
   "private": true,
   "license": "MIT",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "bun run --filter @osm-editor-kit/live-touched build",
     "check": "bun run --filter '*' check",
     "check-exports": "bun run --filter @osm-editor-kit/live-touched check-exports",
     "format": "bun run --filter '*' format",
     "format:check": "bun run --filter '*' format:check",
+    "josm-build": "bun run --filter live-touched-josm-plugin josm-build",
+    "josm-install": "bun run --filter live-touched-josm-plugin josm-install",
     "lint": "bun run --filter '*' lint",
     "release": "bun run build && changeset publish",
     "test": "bun run --filter '*' test",

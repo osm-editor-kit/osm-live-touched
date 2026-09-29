@@ -7,3 +7,7 @@ coverage
 .cache
 *.local
 .wrangler/
+# JOSM plugin (Gradle)
+packages/josm-plugin/build/
+packages/josm-plugin/.gradle/
+packages/josm-plugin/.kotlin/
