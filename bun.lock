@@ -21,7 +21,7 @@
     },
     "packages/live-touched": {
       "name": "@osm-editor-kit/live-touched",
-      "version": "0.1.0",
+      "version": "1.0.0",
       "dependencies": {
         "@osm-editor-kit/key-value-db-client": "^0.1.0",
       },
