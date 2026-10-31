@@ -2,11 +2,22 @@
 
 Editor-agnostic wiring for "live touched": mappers see which OSM objects other mappers are editing near them, **before** those edits are uploaded.
 
+> [!NOTE]
+> Claude Opus 5.5 wrote and reviewed the code of this package. [@tordans](https://github.com/tordans) specified what it should do and tested and verified its user-facing behavior.
+
+## Install
+
+```bash
+bun add @osm-editor-kit/live-touched
+```
+
+It uses the npm client [`@osm-editor-kit/key-value-db-client`](https://www.npmjs.com/package/@osm-editor-kit/key-value-db-client), which is installed with it. ESM only.
+
+## What it does
+
 The package contains the API client usage, the diff-based sync, adaptive polling, status windows, and conflict hints. It has **no UI and no editor code**: each editor (iD, Rapid, …) hooks its events into the session and draws its own map highlight, panel, indicator, and consent dialog. The UI rules and reference texts (English and German) are in [docs/concept.md](../../docs/concept.md), and the privacy statement is in [PRIVACY.md](../../PRIVACY.md).
 
-> Status: pre-release (not on npm yet). It uses the npm client [`@osm-editor-kit/key-value-db-client`](https://www.npmjs.com/package/@osm-editor-kit/key-value-db-client).
-
-## API
+## Usage
 
 ```ts
 import { createLiveTouchedSession, LIVE_TOUCHED_BACKEND } from '@osm-editor-kit/live-touched'
@@ -37,7 +48,13 @@ session.subscribe((state) => render(state))
 
 - `status` is `touched`, `stale`, or `saved`. `hint` is `parallel`, `outdated`, `ok`, or `none`. `items` are already sorted: conflicts first, then by status, newest first.
 - The package has no texts. Map `status` and `hint` to your editor's i18n with the keys in [docs/concept.md](../../docs/concept.md).
-- Also exported: `PRIVACY_URL`, `CONSENT_VERSION` (store it with the user's consent, and ask again when it changes), and the pure helpers `statusOf`, `hintFor`, `compareItems`, `tagsForBbox`, `queryTagsForViewport`, and `bboxIntersects`.
+- Also exported:
+  - `LIVE_TOUCHED_BACKEND`: the production backend (`baseUrl`, `project`, public `apiKey`) to spread into the options.
+  - `PRIVACY_URL` and `CONSENT_VERSION`: store the version with the user's consent, and ask again when it changes.
+  - The time windows `TOUCHED_MS` (30 min), `STALE_MS` (60 min), and `SAVED_MS` (120 min).
+  - The pure helpers `statusOf`, `hintFor`, `compareItems`, `tagsForBbox`, `queryTagsForViewport`, and `bboxIntersects`.
+  - The types `LiveTouchedOptions`, `LiveTouchedSession`, `LiveState`, `LiveItem`, `LocalObject`, `LiveTouchedData`, `Visibility`, `Bbox`, `Hint`, `Status`, `OsmType`, and `OsmUser`.
+- The options `client`, `timers`, `now`, and `visibility` are test hooks. `visibility: null` turns off the pause in background tabs.
 
 Behavior (details in [docs/concept.md](../../docs/concept.md)):
 
@@ -46,17 +63,11 @@ Behavior (details in [docs/concept.md](../../docs/concept.md)):
 
 ## iD integration guide
 
-This is written for the iD--radnetz-berlin work (fork `tordans/iD`, iD 2.43). The frontend lives **inside iD**; the package only does the wiring. The names below were checked against the fork's source on 2026-09-27.
+This is how the iD fork `tordans/iD` (iD 2.43, `iD--radnetz-berlin`) uses the package. The frontend lives **inside iD**; the package only does the wiring.
 
 ### 1. Dependency
 
-In the iD worktree's `package.json`, during development:
-
-```json
-"@osm-editor-kit/live-touched": "file:../osm-live-touched/packages/live-touched"
-```
-
-Run `bun run build` (or `bun run --filter @osm-editor-kit/live-touched build`) in osm-live-touched after changes, then rebuild iD. Once the package is on npm, switch to the version range.
+Add `@osm-editor-kit/live-touched` to iD's `package.json`. For work on the package itself, use `"file:../osm-live-touched/packages/live-touched"`, run `bun run build` here after changes, and rebuild iD.
 
 ### 2. Expose the OSM token
 
@@ -70,7 +81,7 @@ getAccessToken: function() {
 
 The token goes to the key-value-db backend, which uses it only to read the user's id and name. `PRIVACY.md` says so.
 
-### 3. Wiring (e.g. `modules/services/live_touched.js` or `modules/ui/live_touched/`)
+### 3. Wiring (iD: `modules/live_touched/live_touched.ts`)
 
 ```js
 import { createLiveTouchedSession, LIVE_TOUCHED_BACKEND } from '@osm-editor-kit/live-touched';
@@ -140,12 +151,6 @@ export function setupLiveTouched(context) {
   return session;
 }
 ```
-
-Check while building (not verified yet):
-
-- whether `change` also fires on undo, redo, and restore, so `reportModified` sees them (the diff sync handles them either way);
-- the changeset object in `resultSuccess` (is `changeset.id` set after the upload?);
-- that `.w789`-style classes hit the drawn lines, areas, and points, not only labels.
 
 ### 4. UI in iD
 

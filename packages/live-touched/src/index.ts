@@ -1,11 +1,9 @@
 // Public entry of @osm-editor-kit/live-touched. See ../README.md and ../../../docs/concept.md.
 
-export { createLiveTouchedSession, DEBOUNCE_MS } from './session.js'
+export { createLiveTouchedSession } from './session.js'
 export type { LiveTouchedOptions, LiveTouchedSession, Visibility } from './session.js'
 export { compareItems, hintFor, statusOf, SAVED_MS, STALE_MS, TOUCHED_MS } from './status.js'
-export { nextPollDelay, POLL_MS } from './poller.js'
-export { bboxIntersects, queryTagsForViewport, tagsForBbox, tilesForBbox } from './tiles.js'
-export { entryId } from './sync.js'
+export { bboxIntersects, queryTagsForViewport, tagsForBbox } from './tiles.js'
 export type {
   Bbox,
   Hint,
@@ -18,13 +16,10 @@ export type {
   Status,
 } from './types.js'
 
-/** Name of the key-value-db project this package talks to. */
-export const KV_PROJECT = 'live-touched'
-
 /** Production backend. The API key is public by design; it only selects the project. */
 export const LIVE_TOUCHED_BACKEND = {
   baseUrl: 'https://key-value-store.fixmycity.workers.dev',
-  project: KV_PROJECT,
+  project: 'live-touched',
   apiKey: 'kv_825ada0b89b3d63f541f5fd155dca104c2c0a229',
 } as const
 
