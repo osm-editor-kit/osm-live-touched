@@ -2,6 +2,9 @@
 
 Mappers see **live** which OpenStreetMap objects other mappers are editing near them, **before** those edits are uploaded. This helps avoid edit conflicts and shows what is happening in an area right now. Opt-in, off by default.
 
+> [!NOTE]
+> Claude Opus 5.5 wrote and reviewed the code of these packages. [@tordans](https://github.com/tordans) specified what they should do and tested and verified their user-facing behavior.
+
 Part of the [`osm-editor-kit`](https://github.com/osm-editor-kit) family. [FixMyCity](https://fixmycity.de) supports the project with development time and runs the backend.
 
 | Path | What |
@@ -18,8 +21,16 @@ Part of the [`osm-editor-kit`](https://github.com/osm-editor-kit) family. [FixMy
 
 ```bash
 bun install
-bun run check
+bun run check   # format-check, lint-check, type-check, test-run
 bun run build
+```
+
+## Release
+
+Versions and changelogs use [changesets](https://github.com/changesets/changesets), see [`.changeset/README.md`](.changeset/README.md). Releases run from a terminal with npm 2FA:
+
+```bash
+bun run release
 ```
 
 ## License

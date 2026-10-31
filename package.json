@@ -10,19 +10,22 @@
     "check": "bun run --filter '*' check",
     "check-exports": "bun run --filter @osm-editor-kit/live-touched check-exports",
     "format": "bun run --filter '*' format",
-    "format:check": "bun run --filter '*' format:check",
+    "format-check": "bun run --filter '*' format-check",
     "josm-build": "bun run --filter live-touched-josm-plugin josm-build",
     "josm-install": "bun run --filter live-touched-josm-plugin josm-install",
     "lint": "bun run --filter '*' lint",
-    "release": "bun run build && changeset publish",
-    "test": "bun run --filter '*' test",
+    "lint-check": "bun run --filter '*' lint-check",
+    "prepare": "husky",
+    "release": "bun run scripts/release.ts",
+    "test-run": "bun run --filter '*' test-run",
     "type-check": "bun run --filter '*' type-check",
     "version-packages": "changeset version"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@changesets/cli": "^2.31.1",
+    "@changesets/cli": "^3.0.3",
     "@types/bun": "latest",
+    "husky": "^9.1.7",
     "oxfmt": "0.50.0",
     "oxlint": "1.65.0",
     "typescript": "^5.9.3",
@@ -31,5 +34,5 @@
   "engines": {
     "node": ">=22.21.1"
   },
-  "packageManager": "bun@1.4.0"
+  "packageManager": "bun@1.4.4"
 }

@@ -2,25 +2,12 @@
 
 See live which OSM objects other mappers are editing near you, **before** they upload, and share your own edits the same way. It's opt-in. This is the JOSM counterpart of the npm package [`@osm-editor-kit/live-touched`](../live-touched), with the same backend (key-value-db project `live-touched`), the same data format, and the same rules ([docs/concept.md](../../docs/concept.md)). So JOSM and iD users see each other.
 
-Status: 0.1.0, not in the JOSM plugin list yet. Install it by hand (see below).
+> [!NOTE]
+> Claude Opus 5.5 wrote and reviewed the code of this package. [@tordans](https://github.com/tordans) specified what it should do and tested and verified its user-facing behavior.
 
-## What it does
+## Install (macOS)
 
-- **Side panel "Live edits nearby"** (Windows menu, or the toggle button on the right):
-  - **Turn on / Turn off**. The first time you turn it on, a consent dialog explains what is shared.
-  - A list of objects others are editing in the current map view, with a status line ("… is editing this right now", "… edited and saved this (v4)") and conflict hints. Double-click selects the object and zooms to it.
-  - **Privacy** opens `PRIVACY.md`.
-  - **Delete my data** deletes all your entries on the server and turns the feature off.
-  - The panel title shows a dot (●) while others are editing in view.
-- **Map highlight**: orange halo = being edited, faint orange = stale, violet = saved recently, red outline = conflict with your own changes or your version.
-- **Sharing your edits**:
-  - Every 2 s the plugin looks at the objects you modified or deleted in the active data layer (new objects are not shared) and sends the differences. Undo and discard remove your entries again.
-  - After a successful upload, the uploaded objects are marked "saved" with the new version and the changeset id.
-  - Polling runs every 4–10 s and stops when you zoom out further than about zoom 15.
-
-It uses **JOSM's own OSM login** (OAuth 2.0 in Preferences → Connection Settings). You need to be logged in to openstreetmap.org.
-
-## Install into your JOSM (macOS)
+The plugin is not in the JOSM plugin list yet. Install it by hand.
 
 1. **Build** (needs only Docker; the first run downloads Gradle and JOSM 19481):
 
@@ -51,6 +38,22 @@ In JOSM, *Preferences* → *Advanced Preferences*, set:
 | `live-touched.origin` | `https://josm.openstreetmap.de` (must be in the local project's origins) |
 
 Remove the keys to go back to production.
+
+## What it does
+
+- **Side panel "Live edits nearby"** (Windows menu, or the toggle button on the right):
+  - **Turn on / Turn off**. The first time you turn it on, a consent dialog explains what is shared.
+  - A list of objects others are editing in the current map view, with a status line ("… is editing this right now", "… edited and saved this (v4)") and conflict hints. Double-click selects the object and zooms to it.
+  - **Privacy** opens `PRIVACY.md`.
+  - **Delete my data** deletes all your entries on the server and turns the feature off.
+  - The panel title shows a dot (●) while others are editing in view.
+- **Map highlight**: orange halo = being edited, faint orange = stale, violet = saved recently, red outline = conflict with your own changes or your version.
+- **Sharing your edits**:
+  - Every 2 s the plugin looks at the objects you modified or deleted in the active data layer (new objects are not shared) and sends the differences. Undo and discard remove your entries again.
+  - After a successful upload, the uploaded objects are marked "saved" with the new version and the changeset id.
+  - Polling runs every 4–10 s and stops when you zoom out further than about zoom 15.
+
+It uses **JOSM's own OSM login** (OAuth 2.0 in Preferences → Connection Settings). You need to be logged in to openstreetmap.org.
 
 ## Develop
 
