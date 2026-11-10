@@ -142,12 +142,19 @@ if (read('git', ['status', '--porcelain']).out) {
 for (const pkg of toPublish) {
   console.log(`\nPublishing ${pkg.name}@${pkg.version}`)
   if (pkg.manifest.scripts?.build) run('bun', ['run', 'build'], pkg.dir)
-  // A packed tarball, because `npm publish` in a package folder would send the registry the
-  // package.json from before prepack rewrites `workspace:*`.
+  // `bun pm pack` writes the tarball with `workspace:*` replaced by the version of the workspace
+  // package; `npm pack` and `npm publish` in the folder would send `workspace:*` to the registry.
   const packDir = mkdtempSync(join(tmpdir(), 'release-'))
-  run('npm', ['pack', '--pack-destination', packDir], pkg.dir)
+  run('bun', ['pm', 'pack', '--destination', packDir], pkg.dir)
   const tarball = readdirSync(packDir).find((file) => file.endsWith('.tgz'))
-  if (!tarball) fail(`npm pack wrote no tarball for ${pkg.name}.`)
+  if (!tarball) fail(`bun pm pack wrote no tarball for ${pkg.name}.`)
+  const packedManifest = read('tar', [
+    '-xzOf',
+    join(packDir, String(tarball)),
+    'package/package.json',
+  ]).out
+  if (packedManifest.includes('workspace:'))
+    fail(`The tarball of ${pkg.name} still has workspace: versions.`)
   run('npm', ['publish', join(packDir, String(tarball)), '--access', 'public', '--tag', 'latest'])
   rmSync(packDir, { recursive: true })
 }
