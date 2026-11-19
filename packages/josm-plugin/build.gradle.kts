@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-  testImplementation(platform("org.junit:junit-bom:5.11.4"))
+  testImplementation(platform("org.junit:junit-bom:6.1.3"))
   testImplementation("org.junit.jupiter:junit-jupiter")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -32,6 +32,11 @@ josm {
 tasks.withType<JavaCompile>().configureEach {
   options.release.set(11)
   options.encoding = "UTF-8"
+}
+
+// JUnit 6 needs Java 17+; tests are not shipped, so only they compile against 17.
+tasks.compileTestJava {
+  options.release.set(17)
 }
 
 tasks.test {
