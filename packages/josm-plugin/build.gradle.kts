@@ -34,6 +34,11 @@ tasks.withType<JavaCompile>().configureEach {
   options.encoding = "UTF-8"
 }
 
+// JUnit 6 needs Java 17+; tests are not shipped, so only they compile against 17.
+tasks.compileTestJava {
+  options.release.set(17)
+}
+
 tasks.test {
   useJUnitPlatform()
 }
